@@ -140,14 +140,14 @@ def move():
             # Crear una lista de movimientos posibles hacia Pac-Man
             options = []
             
-            if pacman.x > point.x and valid(point + vector(5, 0)):
-                options.append(vector(5, 0))
-            if pacman.x < point.x and valid(point + vector(-5, 0)):
-                options.append(vector(-5, 0))
-            if pacman.y > point.y and valid(point + vector(0, 5)):
-                options.append(vector(0, 5))
-            if pacman.y < point.y and valid(point + vector(0, -5)):
-                options.append(vector(0, -5))
+            if pacman.x > point.x and valid(point + vector(10, 0)):
+                options.append(vector(10, 0))
+            if pacman.x < point.x and valid(point + vector(-10, 0)):
+                options.append(vector(-10, 0))
+            if pacman.y > point.y and valid(point + vector(0, 10)):
+                options.append(vector(0, 10))
+            if pacman.y < point.y and valid(point + vector(0, -10)):
+                options.append(vector(0, -10))
             
             # Elegir una opción válida, si existe
             if options:
@@ -179,7 +179,6 @@ def move():
             return
 
     ontimer(move, 100)
-
 
 def change(x, y):
     """Change pacman aim if valid."""
