@@ -107,6 +107,8 @@ def world():
                 path.dot(2, 'white')
 
 
+from random import choice
+
 def move():
     """Move pacman and all ghosts."""
     writer.undo()
@@ -131,18 +133,39 @@ def move():
     dot(20, 'yellow')
 
     for point, course in ghosts:
+        distance_to_pacman = abs(pacman - point)
+
+        # Si el fantasma está cerca de Pac-Man, perseguirlo
+        if distance_to_pacman < 100:
+            # Crear una lista de movimientos posibles hacia Pac-Man
+            options = []
+            
+            if pacman.x > point.x and valid(point + vector(5, 0)):
+                options.append(vector(5, 0))
+            if pacman.x < point.x and valid(point + vector(-5, 0)):
+                options.append(vector(-5, 0))
+            if pacman.y > point.y and valid(point + vector(0, 5)):
+                options.append(vector(0, 5))
+            if pacman.y < point.y and valid(point + vector(0, -5)):
+                options.append(vector(0, -5))
+            
+            # Elegir una opción válida, si existe
+            if options:
+                course.x, course.y = choice(options)
+        else:
+            # Movimiento aleatorio si Pac-Man está lejos
+            if not valid(point + course):
+                options = [
+                    vector(5, 0),
+                    vector(-5, 0),
+                    vector(0, 5),
+                    vector(0, -5),
+                ]
+                course.x, course.y = choice([opt for opt in options if valid(point + opt)])
+
+        # Mover el fantasma
         if valid(point + course):
             point.move(course)
-        else:
-            options = [
-                vector(5, 0),
-                vector(-5, 0),
-                vector(0, 5),
-                vector(0, -5),
-            ]
-            plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
 
         up()
         goto(point.x + 10, point.y + 10)
@@ -150,6 +173,7 @@ def move():
 
     update()
 
+    # Revisar si algún fantasma toca a Pac-Man
     for point, course in ghosts:
         if abs(pacman - point) < 20:
             return
